@@ -16,6 +16,7 @@
 		FE3EB68B272CFC5F0086A334 /* ButtonRecordingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3EB68A272CFC5F0086A334 /* ButtonRecordingTests.swift */; };
 		FE3EB695272CFC5F0086A334 /* ButtonRecordingUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3EB694272CFC5F0086A334 /* ButtonRecordingUITests.swift */; };
 		FE3EB697272CFC5F0086A334 /* ButtonRecordingUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3EB696272CFC5F0086A334 /* ButtonRecordingUITestsLaunchTests.swift */; };
+		FE3EB6A5272CFC890086A334 /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3EB6A4272CFC890086A334 /* RecordButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		FE3EB690272CFC5F0086A334 /* ButtonRecordingUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ButtonRecordingUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE3EB694272CFC5F0086A334 /* ButtonRecordingUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonRecordingUITests.swift; sourceTree = "<group>"; };
 		FE3EB696272CFC5F0086A334 /* ButtonRecordingUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonRecordingUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		FE3EB6A4272CFC890086A334 /* RecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 		FE3EB672272CFC5D0086A334 /* ButtonRecording */ = {
 			isa = PBXGroup;
 			children = (
+				FE3EB6A3272CFC650086A334 /* Source */,
 				FE3EB673272CFC5D0086A334 /* AppDelegate.swift */,
 				FE3EB675272CFC5D0086A334 /* SceneDelegate.swift */,
 				FE3EB677272CFC5D0086A334 /* ViewController.swift */,
@@ -125,6 +128,14 @@
 				FE3EB696272CFC5F0086A334 /* ButtonRecordingUITestsLaunchTests.swift */,
 			);
 			path = ButtonRecordingUITests;
+			sourceTree = "<group>";
+		};
+		FE3EB6A3272CFC650086A334 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				FE3EB6A4272CFC890086A334 /* RecordButton.swift */,
+			);
+			path = Source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -258,6 +269,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE3EB6A5272CFC890086A334 /* RecordButton.swift in Sources */,
 				FE3EB678272CFC5D0086A334 /* ViewController.swift in Sources */,
 				FE3EB674272CFC5D0086A334 /* AppDelegate.swift in Sources */,
 				FE3EB676272CFC5D0086A334 /* SceneDelegate.swift in Sources */,
