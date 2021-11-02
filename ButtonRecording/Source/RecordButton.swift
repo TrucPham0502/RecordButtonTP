@@ -77,17 +77,26 @@ class RecordButton : UIButton {
     
     private func prepareUI(){
         self.addTarget(self, action: #selector(RecordButton.didTouchDown), for: .touchDown)
-        self.addTarget(self, action: #selector(RecordButton.didTouchUp), for: .touchUpInside)
-        self.addTarget(self, action: #selector(RecordButton.didTouchUp), for: .touchUpOutside)
+        self.addTarget(self, action: #selector(RecordButton.didTouchUp), for: [.touchUpInside, .touchUpOutside, .touchCancel])
+        
+        circleLayer = CALayer()
+        self.layer.insertSublayer(circleLayer, at: 0)
+        circleBorder = CALayer()
+        self.layer.insertSublayer(circleBorder, at: 0)
+        gradientMaskLayer = self.gradientMask()
+        progressLayer = CAShapeLayer()
+        gradientMaskLayer.mask = progressLayer
+        self.layer.addSublayer(gradientMaskLayer)
+        
         self.drawButton()
     }
     
     
     fileprivate func drawButton() {
-        
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
         self.backgroundColor = UIColor.clear
-        let layer = self.layer
-        circleLayer = CALayer()
+        
         circleLayer.backgroundColor = buttonColor.cgColor
         
         let size: CGFloat = self.frame.size.width / 1.3
@@ -95,45 +104,45 @@ class RecordButton : UIButton {
         circleLayer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         circleLayer.position = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
         circleLayer.cornerRadius = size / 2
-        layer.insertSublayer(circleLayer, at: 0)
         
-        circleBorder = CALayer()
+        let lineWidth : CGFloat = 3.0
         circleBorder.backgroundColor = UIColor.clear.cgColor
-        circleBorder.borderWidth = 3
+        circleBorder.borderWidth = lineWidth
         circleBorder.borderColor = buttonColor.cgColor
-        circleBorder.bounds = CGRect(x: 0, y: 0, width: self.bounds.size.width - 1.5, height: self.bounds.size.height - 1.5)
+        circleBorder.bounds = CGRect(x: 0, y: 0, width: self.bounds.size.width, height: self.bounds.size.height)
         circleBorder.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         circleBorder.position = CGPoint(x: self.bounds.midX,y: self.bounds.midY)
         circleBorder.cornerRadius = self.frame.size.width / 2
-        layer.insertSublayer(circleBorder, at: 0)
+        
         
         let startAngle: CGFloat = CGFloat(Double.pi) + CGFloat(Double.pi/2)
         let endAngle: CGFloat = CGFloat(Double.pi) * 3 + CGFloat(Double.pi/2)
         let centerPoint: CGPoint = CGPoint(x: self.frame.size.width / 2, y: self.frame.size.height / 2)
-        gradientMaskLayer = self.gradientMask()
-        progressLayer = CAShapeLayer()
-        progressLayer.path = UIBezierPath(arcCenter: centerPoint, radius: self.frame.size.width / 2 - 2, startAngle: startAngle, endAngle: endAngle, clockwise: true).cgPath
+        
+        self.gradientMaskLayer.frame = self.bounds
+        
+        progressLayer.path = UIBezierPath(arcCenter: centerPoint, radius: self.frame.size.width / 2 - lineWidth/2, startAngle: startAngle, endAngle: endAngle, clockwise: true).cgPath
         progressLayer.backgroundColor = UIColor.clear.cgColor
         progressLayer.fillColor = nil
         progressLayer.strokeColor = UIColor.black.cgColor
-        progressLayer.lineWidth = 3.0
+        progressLayer.lineWidth = lineWidth
         progressLayer.strokeStart = 0.0
         progressLayer.strokeEnd = 0.0
-        gradientMaskLayer.mask = progressLayer
-        layer.addSublayer(gradientMaskLayer)
+        CATransaction.commit()
     }
+    
     
     fileprivate func setRecording(_ recording: Bool) {
         
         let duration: TimeInterval = 0.15
         circleLayer.contentsGravity = CALayerContentsGravity(rawValue: "center")
         
-        let scale = CABasicAnimation(keyPath: "transform.scale")
-        scale.fromValue = recording ? 1.0 : 0.88
-        scale.toValue = recording ? 0.88 : 1
-        scale.duration = duration
-        scale.fillMode = CAMediaTimingFillMode.forwards
-        scale.isRemovedOnCompletion = false
+//        let scale = CABasicAnimation(keyPath: "transform.scale")
+//        scale.fromValue = recording ? 1.0 : 0.88
+//        scale.toValue = recording ? 0.88 : 1
+//        scale.duration = duration
+//        scale.fillMode = CAMediaTimingFillMode.forwards
+//        scale.isRemovedOnCompletion = false
         
         let color = CABasicAnimation(keyPath: "backgroundColor")
         color.duration = duration
@@ -145,7 +154,7 @@ class RecordButton : UIButton {
         circleAnimations.isRemovedOnCompletion = false
         circleAnimations.fillMode = CAMediaTimingFillMode.forwards
         circleAnimations.duration = duration
-        circleAnimations.animations = [scale, color]
+        circleAnimations.animations = [color]
         
         let borderColor: CABasicAnimation = CABasicAnimation(keyPath: "borderColor")
         borderColor.duration = duration
@@ -189,12 +198,10 @@ class RecordButton : UIButton {
     }
     
     override func layoutSubviews() {
-        circleLayer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        circleLayer.position = CGPoint(x: self.bounds.midX,y: self.bounds.midY)
-        circleBorder.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        circleBorder.position = CGPoint(x: self.bounds.midX,y: self.bounds.midY)
+        drawButton()
         super.layoutSubviews()
     }
+
     
     
     @objc private func didTouchDown(){
@@ -233,7 +240,7 @@ class RecordButton : UIButton {
         let value = currentProgress + ( stepSecond / maxDurationSecond)
         self.setProgress(value)
         if currentProgress >= 1 {
-            if(closeWhenFinished) { stop() }
+            if(closeWhenFinished) { endRecord() }
             else { progressTimer.invalidate() }
         }
     }
